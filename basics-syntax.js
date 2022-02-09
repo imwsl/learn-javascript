@@ -1,7 +1,5 @@
-// basics-all-in-one.js
-//
-// JavaScript基础语法一次性学完
-//
+// basics-syntax.js
+// 基础语法
 
 // 这是一行注释
 /*
@@ -119,16 +117,18 @@ console.log(l)
 
 /// 标签 label
 /// 标签可以是任意的标识符,但不能是保留字,通常和break和continue配合使用
-/// JavaScript不支持Label吗?怎么写都不对...
+/// Label一般配合for do..while一起执行
+/// 如下图代码 break top的意思是跳出top代码块
+/// continue top是继续执行top代码块
 var m = 0;
-
-
-top: m++;
-console.log("top跳转中m = " + m);
+top:
 for(;;) {
-    if (m < 20) {
-	break top;
+    m = m + 1;
+    if (m < 5) {
+	continue top;
     } else {
-	break;
+	break top;
     }
 }
+
+console.log("m is " + m)
