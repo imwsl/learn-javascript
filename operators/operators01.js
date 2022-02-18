@@ -95,4 +95,48 @@ console.log(1 == true) // true, 等同于 1 === Number(true)
 console.log(0 == false) // true, 等同于 0 === Number(false)
 console.log(2 == true) // false, 等同于 2 === Number(true)
 console.log(2 == false) // false, 等同于 2 === Number(false)
-//console.
+
+// 对象与原始类型值比较
+// * 对象先变成原始类型值然后比较 valueOf() 方法
+console.log("\n -------------------- 对象与原始类型值比较 -------------------------\n")
+console.log([1] == 1) // true
+console.log([1] == '1') // true
+console.log([1, 2] == '1, 2') // true
+console.log([1] == true) // true
+console.log([2] == true) // true
+
+// 对象先调用valueOf 然后调用toString
+var obj = {
+    valueOf: function() {
+        console.log("valueOf...")
+        return obj
+    },
+    toString: function() {
+        console.log("toString...")
+        return 'foo'
+    }
+};
+console.log(obj == 'foo')
+
+console.log("\n -------------------- undefined & null -------------------------\n")
+// *undefined和null只有和自身比较或相互比较的时候返回true，与其它比较都返回false
+console.log(undefined == undefined) // true
+console.log(null == null) // true
+console.log(undefined == null) // true
+console.log(0 == null) // false
+console.log(false == undefined) // false
+console.log(false == null) // false
+
+// 相等运算符的缺点
+// * 相等运算符存在隐藏的类型转化，因此会出现一些违反直觉的结果，建议使用严格的相等运算
+console.log("\n -------------------- 相等运算符存在隐藏的类型转化，因此会出现一些违反直觉的结果 -------------------------\n")
+console.log(0 == '') // true
+console.log(0 == '0') // true
+console.log(2 == true) // false
+console.log(2 == false) // false
+console.log(false == 'false') // false
+console.log(false == '0') // true
+console.log(false == undefined) // false
+console.log(false == null) // false
+console.log(null == undefined) // true
+console.log(' \t\r\n' == 0) // true
