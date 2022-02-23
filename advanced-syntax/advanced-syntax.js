@@ -49,3 +49,54 @@ console.log("\n-------------强制转换String----------------------\n")
 // * 布尔值： true 转换为"true", false转换为"false"
 // * undefined: 转换为“undefined”
 // * null: 转换为"null"
+console.log("String(123) = ", String(123)) // '123'
+console.log("String('abc') = ", String('abc')) // 'abc'
+console.log("String(true) = ", String(true)) // "true"
+console.log("String(false) = ", String(false)) // "false"
+console.log("String(undefined) = ", String(undefined)) // "undefined"
+console.log("String(null) = ", String(null)) // "null"
+
+// 对象
+// * 如果参数是对象，则返回类型字符串 [object Object]
+// * 如果数组，则返回数组的字符串形式
+console.log(String({a: 1})) // "[object Object]"
+console.log(String([1, 2, 3])) // "1, 2, 3"
+
+// String 转换对象的步骤
+// * 第一步: 调用toString方法，返回原始类型，则调用，不再进行以下步骤
+// * 第二步：如果toString方法返回对象，则再调用valueOf, 返回原始类型，则调用，不再进行一下步骤
+// * 第三步：如果valueOf方法返回的是对象，就报错
+var obj1 = {
+    a: 1,
+    valueOf: function() {
+        console.log("call valueOf...")
+        return "Hello World"
+    },
+    toString: function() {
+        console.log("call toString...")
+        return {}
+    }
+}
+console.log(String(obj1)) // "Hello World"
+
+console.log("\n-------------强制转换Boolean----------------------\n")
+// 规则：除了undefined, null, 0, NaN, '' 转化为false, 其它转换为true
+console.log("Boolean(undefined) = ", Boolean(undefined)) // false
+console.log("Boolean(null) = ", Boolean(null)) // false
+console.log("Boolean(0) = ", Boolean(0)) // false
+console.log("Boolean(NaN) = ", Boolean(NaN)) // false
+console.log("Boolean('') = ", Boolean('')) // false
+
+// 所有对象转换的结果都是true
+console.log("\n所有对象转换的结果都是true")
+console.log("Boolean({}) = ", Boolean({})) // true
+console.log("Boolean([]) = ", Boolean([])) // true
+console.log("Boolean(new Boolean(false)) = ", Boolean(new Boolean(false))) // true
+
+console.log("\n-------------自动转换----------------------\n")
+// 规则预期是是什么类型，就用什么类型转换
+console.log("123 + 'abc'", 123 + 'abc') // 预期String '123abc'
+if ('abc') { // 预期Boolean
+    console.log("hello")
+}
+// ** 预期不确定，建议使用Boolean(), Number()和String() 函数进行显示转换
