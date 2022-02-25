@@ -85,3 +85,102 @@ var y = new x.constructor()
 console.log(y instanceof X) // true
 
 // createCopy
+// 修改原型对象(prototype)的时候，同时也要修改constructor属性
+// * 例子
+function Person(name) {
+    this.name = name
+}
+console.log(Person.prototype.constructor === Person) // true
+Person.prototype = {
+    hello: function() {}
+}
+console.log(Person.prototype.constructor === Person) // false
+Person.prototype.constructor = Person
+console.log(Person.prototype.constructor === Person) // true
+
+// instanceof 运算符
+var p = new Person('Joe')
+console.log(p instanceof Person) // true
+// 等价于
+console.log(Person.prototype.isPrototypeOf(p)) // true
+
+// instanceof 可以检查整个原型链
+// * 例子
+var d = new Date()
+console.log(d instanceof Date) // true
+console.log(d instanceof Object) // true
+
+// *技巧：由于任意对象(除了null)都是Object实例，所以instanceof可判断一个值是否为null
+function isNull(v) {
+    return !(v instanceof Object)
+}
+console.log(null instanceof Object) // false
+console.log(isNull(null)) // true
+var obj = {}
+console.log(obj instanceof Object) // true
+console.log(isNull(obj)) // false
+
+// 构造函数的继承
+// * 第一步，子类调用父类的构造函数，这样子类就有父类的实例的属性
+/*
+function Sub(value) { // Sub子类
+    Super.call(this)
+    this.prop = value
+}
+// * 第二步，让子类的原型指向父类的原型,这样之类就可以指向父类的原型了
+Sub.prototype = Object.create(Super.prototype) // 注意，不能直接指向Super.prototype,这样在修改子类的时候会修改父类的prototype
+Sub.prototype.constructor = Sub 
+//Sub.prototype.method = '...'
+
+// 等价写法
+Sub.prototype = new Super() // 不推荐，子类会具有父类的实例方法，这些方法可能并不是我们需要的
+*/
+// 举个例子
+function Shape() {
+    this.x = 0
+    this.y = 0
+}
+
+Shape.prototype.move = function(x, y) {
+    this.x += x 
+    this.y += y 
+    console.log('Shape moved')
+}
+
+function Rectangle() {
+    Shape.call(this)
+}
+Rectangle.prototype = Object.create(Shape.prototype)
+Rectangle.prototype.constructor = Rectangle
+var r = new Rectangle()
+console.log(r instanceof Rectangle) // true
+console.log(r instanceof Shape) // true
+
+// 多重继承
+// * JavaScript不提供多重继承
+// * 技巧：要实现多重继承需要通过一种变通的方法...
+// 例子
+function M1() {
+    this.hello = "Hello"
+}
+function M2() {
+    this.world = "World"
+}
+function S() {
+    M1.call(this)
+    M2.call(this)
+}
+
+// 继承M1
+S.prototype = Object.create(M1.prototype)
+// 继承链接上添加上M2
+Object.assign(S.prototype, M2.prototype)
+// 指定构造函数
+S.prototype.constructor = S
+
+var s = new S()
+console.log(s instanceof S) // true
+console.log(s instanceof M2) // !! false 这是一种Mixin模式
+console.log(s instanceof M1) // true 
+console.log(s instanceof Object) // true
+console.log(s.hello + " " + s.world) // "Hello World"
